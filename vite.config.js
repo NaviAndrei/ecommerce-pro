@@ -12,6 +12,8 @@ export default defineConfig({
         target: 'http://0.0.0.0:8000',
         changeOrigin: true
       }
-    }
+    },
+    hmr: false,
+    allowedHosts: 'all'
   }
 });
