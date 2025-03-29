@@ -11,7 +11,6 @@ const store = configureStore({
     cart: cartReducer,
     orders: ordersReducer
   },
-  // For devtools in development only
   devTools: process.env.NODE_ENV !== 'production'
 });
 

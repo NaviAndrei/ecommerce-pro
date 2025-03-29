@@ -1,54 +1,78 @@
 import axios from 'axios';
 import { getToken } from '../utils/authUtils';
 
-// Create axios instance with baseURL
-const apiClient = axios.create({
+// Base API configuration
+const api = axios.create({
   baseURL: '/api',
   headers: {
     'Content-Type': 'application/json'
   }
 });
 
-// Add request interceptor to add auth token to requests
-apiClient.interceptors.request.use(
-  config => {
+// Request interceptor for adding auth token
+api.interceptors.request.use(
+  (config) => {
     const token = getToken();
     if (token) {
-      config.headers['Authorization'] = `Bearer ${token}`;
+      config.headers.Authorization = `Bearer ${token}`;
     }
     return config;
   },
-  error => Promise.reject(error)
+  (error) => Promise.reject(error)
 );
 
-// Authentication API endpoints
+// Authentication endpoints
 export const authAPI = {
-  login: (credentials) => apiClient.post('/token/', credentials),
-  register: (userData) => apiClient.post('/register/', userData),
-  getProfile: () => apiClient.get('/profile/'),
-  updateProfile: (profileData) => apiClient.put('/profile/', profileData)
+  // Login user
+  login: (credentials) => api.post('/auth/token/', credentials),
+  
+  // Register new user
+  register: (userData) => api.post('/auth/register/', userData),
+  
+  // Get user profile
+  getProfile: () => api.get('/auth/profile/'),
+  
+  // Update user profile
+  updateProfile: (profileData) => api.put('/auth/profile/', profileData)
 };
 
-// Products API endpoints
+// Products endpoints
 export const productsAPI = {
-  getProducts: (params) => apiClient.get('/products/', { params }),
-  getProduct: (id) => apiClient.get(`/products/${id}/`),
-  getCategories: () => apiClient.get('/categories/')
+  // Get all products
+  getProducts: (params) => api.get('/products/', { params }),
+  
+  // Get single product by ID
+  getProduct: (id) => api.get(`/products/${id}/`),
+  
+  // Get product categories
+  getCategories: () => api.get('/categories/')
 };
 
-// Cart API endpoints
+// Cart endpoints
 export const cartAPI = {
-  getCart: () => apiClient.get('/cart/'),
-  addToCart: (productId, quantity) => apiClient.post('/cart/items/', { product_id: productId, quantity }),
-  updateCartItem: (itemId, quantity) => apiClient.put(`/cart/items/${itemId}/`, { quantity }),
-  removeCartItem: (itemId) => apiClient.delete(`/cart/items/${itemId}/`)
+  // Get user cart
+  getCart: () => api.get('/cart/'),
+  
+  // Add item to cart
+  addCartItem: (cartData) => api.post('/cart/items/', cartData),
+  
+  // Update cart item
+  updateCartItem: (itemId, quantity) => api.put(`/cart/items/${itemId}/`, { quantity }),
+  
+  // Remove item from cart
+  removeCartItem: (itemId) => api.delete(`/cart/items/${itemId}/`)
 };
 
-// Orders API endpoints
+// Orders endpoints
 export const ordersAPI = {
-  getOrders: () => apiClient.get('/orders/'),
-  getOrder: (id) => apiClient.get(`/orders/${id}/`),
-  createOrder: (orderData) => apiClient.post('/orders/', orderData)
+  // Get user orders
+  getOrders: () => api.get('/orders/'),
+  
+  // Get single order
+  getOrder: (id) => api.get(`/orders/${id}/`),
+  
+  // Create a new order
+  createOrder: (orderData) => api.post('/orders/', orderData)
 };
 
-export default apiClient;
+export default api;

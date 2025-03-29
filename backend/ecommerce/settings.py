@@ -15,7 +15,7 @@ SECRET_KEY = os.getenv('SECRET_KEY', 'django-insecure-mng6hkv=@f5a$xnp06+j4)2=1h
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['0.0.0.0', 'localhost', '127.0.0.1']
+ALLOWED_HOSTS = ['0.0.0.0', 'localhost', '127.0.0.1', 'a43743ea-7655-4391-a402-9ff88695e225-00-1nj87by6s1qab.kirk.replit.dev', '*.replit.dev']
 
 # Application definition
 INSTALLED_APPS = [

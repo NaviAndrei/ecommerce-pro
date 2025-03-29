@@ -16,12 +16,12 @@ urlpatterns = [
     path('', include(router.urls)),
     
     # Authentication
-    path('register/', RegisterView.as_view(), name='register'),
-    path('token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
-    path('token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
+    path('auth/register/', RegisterView.as_view(), name='register'),
+    path('auth/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
+    path('auth/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
     
     # User profile
-    path('profile/', ProfileView.as_view(), name='profile'),
+    path('auth/profile/', ProfileView.as_view(), name='profile'),
     
     # Cart
     path('cart/', CartView.as_view(), name='cart'),

@@ -1,131 +1,100 @@
-import React, { useState, useEffect } from 'react';
-import styled, { css, keyframes } from 'styled-components';
+import React from 'react';
+import styled, { css } from 'styled-components';
 
-const fadeIn = keyframes`
-  from {
-    opacity: 0;
-    transform: translateY(-10px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-`;
-
-const fadeOut = keyframes`
-  from {
-    opacity: 1;
-    transform: translateY(0);
-  }
-  to {
-    opacity: 0;
-    transform: translateY(-10px);
-  }
-`;
+const variants = {
+  info: css`
+    background-color: var(--info-light);
+    border-left-color: var(--info-color);
+    
+    .alert-title {
+      color: var(--info-dark);
+    }
+  `,
+  success: css`
+    background-color: var(--success-light);
+    border-left-color: var(--success-color);
+    
+    .alert-title {
+      color: var(--success-dark);
+    }
+  `,
+  warning: css`
+    background-color: var(--warning-light);
+    border-left-color: var(--warning-color);
+    
+    .alert-title {
+      color: var(--warning-dark);
+    }
+  `,
+  error: css`
+    background-color: var(--error-light);
+    border-left-color: var(--error-color);
+    
+    .alert-title {
+      color: var(--error-dark);
+    }
+  `
+};
 
 const AlertContainer = styled.div`
-  padding: 1rem;
-  margin-bottom: 1rem;
-  border-radius: var(--border-radius);
   display: flex;
-  align-items: center;
-  justify-content: space-between;
-  animation: ${props => props.isClosing ? fadeOut : fadeIn} 0.3s ease-in-out;
+  padding: 1rem;
+  border-radius: var(--border-radius);
+  margin-bottom: 1.5rem;
+  border-left: 4px solid;
+  position: relative;
   
-  ${props => {
-    switch (props.type) {
-      case 'success':
-        return css`
-          background-color: rgba(76, 175, 80, 0.1);
-          border: 1px solid var(--success-color);
-          color: var(--success-color);
-        `;
-      case 'error':
-        return css`
-          background-color: rgba(244, 67, 54, 0.1);
-          border: 1px solid var(--error-color);
-          color: var(--error-color);
-        `;
-      case 'warning':
-        return css`
-          background-color: rgba(255, 152, 0, 0.1);
-          border: 1px solid var(--warning-color);
-          color: var(--warning-color);
-        `;
-      case 'info':
-      default:
-        return css`
-          background-color: rgba(33, 150, 243, 0.1);
-          border: 1px solid var(--info-color);
-          color: var(--info-color);
-        `;
-    }
-  }}
+  ${props => variants[props.$variant || 'info']}
 `;
 
 const AlertContent = styled.div`
   flex: 1;
 `;
 
+const AlertTitle = styled.div`
+  font-weight: 600;
+  margin-bottom: 0.25rem;
+  font-size: 1rem;
+  class-name: alert-title;
+`;
+
+const AlertMessage = styled.div`
+  font-size: 0.9rem;
+  color: var(--dark-color);
+`;
+
 const CloseButton = styled.button`
-  background: none;
+  background: transparent;
   border: none;
-  color: inherit;
   cursor: pointer;
-  font-size: 1.2rem;
+  font-size: 1.25rem;
+  line-height: 1;
   padding: 0;
-  margin-left: 1rem;
+  color: var(--dark-gray);
   opacity: 0.7;
+  transition: opacity 0.2s;
   
   &:hover {
     opacity: 1;
   }
 `;
 
-const Alert = ({ 
-  type = 'info', 
-  message, 
-  dismissible = true,
-  timeout = 0,
-  onClose 
+const Alert = ({
+  variant = 'info',
+  title,
+  children,
+  onDismiss,
+  ...props
 }) => {
-  const [visible, setVisible] = useState(true);
-  const [isClosing, setIsClosing] = useState(false);
-  
-  const handleClose = () => {
-    setIsClosing(true);
-    
-    // Wait for animation to complete before removing from DOM
-    setTimeout(() => {
-      setVisible(false);
-      
-      if (onClose) {
-        onClose();
-      }
-    }, 300);
-  };
-  
-  useEffect(() => {
-    // If timeout is provided, automatically close after that duration
-    if (timeout > 0) {
-      const timer = setTimeout(() => {
-        handleClose();
-      }, timeout);
-      
-      return () => clearTimeout(timer);
-    }
-  }, [timeout]);
-  
-  if (!visible) {
-    return null;
-  }
-  
   return (
-    <AlertContainer type={type} isClosing={isClosing}>
-      <AlertContent>{message}</AlertContent>
+    <AlertContainer $variant={variant} {...props}>
+      <AlertContent>
+        {title && <AlertTitle>{title}</AlertTitle>}
+        <AlertMessage>{children}</AlertMessage>
+      </AlertContent>
       
-      {dismissible && (
-        <CloseButton onClick={handleClose} aria-label="Close alert">
+      {onDismiss && (
+        <CloseButton type="button" onClick={onDismiss}>
           ×
         </CloseButton>
       )}

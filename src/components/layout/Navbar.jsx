@@ -4,155 +4,210 @@ import { useDispatch, useSelector } from 'react-redux';
 import styled from 'styled-components';
 import { logout } from '../../store/slices/authSlice';
 
-const Header = styled.header`
-  background-color: var(--primary-color);
-  color: white;
-  padding: 1rem 0;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+const NavContainer = styled.header`
+  background-color: white;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 `;
 
-const NavContainer = styled.div`
-  max-width: var(--max-width);
-  margin: 0 auto;
-  padding: 0 1rem;
+const NavWrapper = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 1rem 2rem;
 `;
 
 const Logo = styled(Link)`
   font-size: 1.5rem;
-  font-weight: bold;
-  color: white;
+  font-weight: 700;
+  color: var(--primary-color);
   text-decoration: none;
+`;
+
+const MenuButton = styled.button`
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  width: 30px;
+  height: 21px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  z-index: 10;
   
-  &:hover {
-    text-decoration: none;
+  @media (min-width: 768px) {
+    display: none;
+  }
+  
+  div {
+    width: 30px;
+    height: 3px;
+    background-color: var(--dark-color);
+    border-radius: 10px;
+    transition: all 0.3s linear;
+    position: relative;
+    transform-origin: 1px;
+    
+    &:first-child {
+      transform: ${({ $isOpen }) => ($isOpen ? 'rotate(45deg)' : 'rotate(0)')};
+    }
+    
+    &:nth-child(2) {
+      opacity: ${({ $isOpen }) => ($isOpen ? '0' : '1')};
+      transform: ${({ $isOpen }) => ($isOpen ? 'translateX(20px)' : 'translateX(0)')};
+    }
+    
+    &:nth-child(3) {
+      transform: ${({ $isOpen }) => ($isOpen ? 'rotate(-45deg)' : 'rotate(0)')};
+    }
   }
 `;
 
-const NavLinks = styled.nav`
+const NavMenu = styled.div`
   display: flex;
   align-items: center;
   
-  @media (max-width: 768px) {
-    display: ${({ isOpen }) => (isOpen ? 'flex' : 'none')};
-    flex-direction: column;
-    position: absolute;
-    top: 60px;
-    left: 0;
+  @media (max-width: 767px) {
+    position: fixed;
+    top: 0;
     right: 0;
-    background-color: var(--primary-color);
-    padding: 1rem;
-    z-index: 10;
+    height: 100vh;
+    width: 250px;
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 2rem;
+    background-color: white;
+    box-shadow: -2px 0 5px rgba(0, 0, 0, 0.1);
+    transform: ${({ $isOpen }) => ($isOpen ? 'translateX(0)' : 'translateX(100%)')};
+    transition: transform 0.3s ease-in-out;
+    z-index: 5;
+    
+    a, button {
+      margin: 0.5rem 0;
+    }
+  }
+`;
+
+const NavOverlay = styled.div`
+  display: ${({ $isOpen }) => ($isOpen ? 'block' : 'none')};
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 4;
+  
+  @media (min-width: 768px) {
+    display: none;
   }
 `;
 
 const NavLink = styled(Link)`
-  color: white;
-  margin-left: 1.5rem;
+  margin: 0 1rem;
+  color: var(--dark-color);
   text-decoration: none;
   font-weight: 500;
   
   &:hover {
-    text-decoration: underline;
-  }
-  
-  @media (max-width: 768px) {
-    margin: 0.5rem 0;
+    color: var(--primary-color);
   }
 `;
 
 const NavButton = styled.button`
-  background: none;
+  margin: 0 1rem;
+  color: var(--dark-color);
+  background: transparent;
   border: none;
-  color: white;
-  margin-left: 1.5rem;
+  font-family: inherit;
   font-size: 1rem;
   font-weight: 500;
   cursor: pointer;
   
   &:hover {
-    text-decoration: underline;
-  }
-  
-  @media (max-width: 768px) {
-    margin: 0.5rem 0;
+    color: var(--primary-color);
   }
 `;
 
-const CartBadge = styled.span`
-  background-color: var(--secondary-color);
+const CartCount = styled.span`
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--primary-color);
   color: white;
+  font-size: 0.75rem;
+  font-weight: 700;
+  width: 18px;
+  height: 18px;
   border-radius: 50%;
-  padding: 0.1rem 0.4rem;
-  font-size: 0.7rem;
-  margin-left: 0.3rem;
-  font-weight: bold;
-`;
-
-const HamburgerButton = styled.button`
-  display: none;
-  background: none;
-  border: none;
-  color: white;
-  font-size: 1.5rem;
-  cursor: pointer;
-  
-  @media (max-width: 768px) {
-    display: block;
-  }
+  margin-left: 5px;
 `;
 
 const Navbar = () => {
-  const [isOpen, setIsOpen] = useState(false);
-  const navigate = useNavigate();
-  const dispatch = useDispatch();
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
   const { isAuthenticated, user } = useSelector(state => state.auth);
   const { items } = useSelector(state => state.cart);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
   
-  const cartItemCount = items.reduce((total, item) => total + item.quantity, 0);
+  const toggleMenu = () => {
+    setIsMenuOpen(!isMenuOpen);
+  };
+  
+  const closeMenu = () => {
+    setIsMenuOpen(false);
+  };
   
   const handleLogout = () => {
     dispatch(logout());
-    navigate('/login');
+    navigate('/');
+    closeMenu();
   };
   
-  const toggleMenu = () => {
-    setIsOpen(!isOpen);
-  };
+  const cartItemsCount = items?.reduce((total, item) => total + item.quantity, 0) || 0;
   
   return (
-    <Header>
-      <NavContainer>
-        <Logo to="/">ShopEase</Logo>
+    <NavContainer>
+      <NavWrapper>
+        <Logo to="/">
+          ShopEase
+        </Logo>
         
-        <HamburgerButton onClick={toggleMenu}>
-          ☰
-        </HamburgerButton>
+        <MenuButton 
+          $isOpen={isMenuOpen} 
+          onClick={toggleMenu}
+          aria-label={isMenuOpen ? 'Close menu' : 'Open menu'}
+        >
+          <div />
+          <div />
+          <div />
+        </MenuButton>
         
-        <NavLinks isOpen={isOpen}>
-          <NavLink to="/">Home</NavLink>
-          <NavLink to="/products">Products</NavLink>
-          
+        <NavMenu $isOpen={isMenuOpen}>
+          <NavLink to="/" onClick={closeMenu}>Home</NavLink>
+          <NavLink to="/products" onClick={closeMenu}>Products</NavLink>
           {isAuthenticated ? (
             <>
-              <NavLink to="/cart">
-                Cart
-                {cartItemCount > 0 && <CartBadge>{cartItemCount}</CartBadge>}
-              </NavLink>
-              <NavLink to="/profile">Profile</NavLink>
+              <NavLink to="/profile" onClick={closeMenu}>Profile</NavLink>
               <NavButton onClick={handleLogout}>Logout</NavButton>
             </>
           ) : (
             <>
-              <NavLink to="/login">Login</NavLink>
-              <NavLink to="/register">Register</NavLink>
+              <NavLink to="/login" onClick={closeMenu}>Login</NavLink>
+              <NavLink to="/register" onClick={closeMenu}>Register</NavLink>
             </>
           )}
-        </NavLinks>
-      </NavContainer>
-    </Header>
+          <NavLink to="/cart" onClick={closeMenu}>
+            Cart
+            {cartItemsCount > 0 && <CartCount>{cartItemsCount}</CartCount>}
+          </NavLink>
+        </NavMenu>
+        
+        <NavOverlay $isOpen={isMenuOpen} onClick={closeMenu} />
+      </NavWrapper>
+    </NavContainer>
   );
 };
 

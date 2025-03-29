@@ -1,123 +1,101 @@
 import React from 'react';
-import styled, { css } from 'styled-components';
+import styled from 'styled-components';
 
 const InputContainer = styled.div`
-  margin-bottom: 1rem;
+  margin-bottom: 1.5rem;
 `;
 
 const Label = styled.label`
   display: block;
   margin-bottom: 0.5rem;
   font-weight: 500;
-  color: var(--text-color);
+  color: var(--dark-color);
 `;
 
-const inputStyles = css`
+const StyledInput = styled.input`
   width: 100%;
-  padding: 0.75rem;
-  font-size: 1rem;
-  border: 1px solid ${props => props.error ? 'var(--error-color)' : 'var(--light-gray)'};
+  padding: 0.75rem 1rem;
+  border: 1px solid ${props => props.$error ? 'var(--error-color)' : 'var(--border-color)'};
   border-radius: var(--border-radius);
-  background-color: ${props => props.disabled ? 'var(--light-gray)' : 'white'};
-  transition: border-color 0.2s ease-in-out;
+  font-size: 1rem;
+  transition: border 0.2s;
+  background-color: ${props => props.disabled ? 'var(--light-bg)' : 'white'};
   
   &:focus {
     outline: none;
-    border-color: ${props => props.error ? 'var(--error-color)' : 'var(--primary-color)'};
-    box-shadow: 0 0 0 2px ${props => props.error 
-      ? 'rgba(244, 67, 54, 0.2)' 
-      : 'rgba(63, 81, 181, 0.2)'};
-  }
-  
-  &::placeholder {
-    color: var(--medium-gray);
-  }
-  
-  &:disabled {
-    cursor: not-allowed;
-    opacity: 0.7;
+    border-color: ${props => props.$error ? 'var(--error-color)' : 'var(--primary-color)'};
+    box-shadow: 0 0 0 2px ${props => props.$error ? 'var(--error-light)' : 'var(--primary-light)'};
   }
 `;
 
-const Input = styled.input`
-  ${inputStyles}
-`;
-
-const TextArea = styled.textarea`
-  ${inputStyles}
-  resize: vertical;
+const StyledTextarea = styled.textarea`
+  width: 100%;
+  padding: 0.75rem 1rem;
+  border: 1px solid ${props => props.$error ? 'var(--error-color)' : 'var(--border-color)'};
+  border-radius: var(--border-radius);
+  font-size: 1rem;
   min-height: 100px;
-`;
-
-const Select = styled.select`
-  ${inputStyles}
+  resize: vertical;
+  transition: border 0.2s;
+  background-color: ${props => props.disabled ? 'var(--light-bg)' : 'white'};
   
-  /* Custom arrow for select */
-  appearance: none;
-  background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23999' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
-  background-repeat: no-repeat;
-  background-position: right 0.75rem center;
-  background-size: 1em;
+  &:focus {
+    outline: none;
+    border-color: ${props => props.$error ? 'var(--error-color)' : 'var(--primary-color)'};
+    box-shadow: 0 0 0 2px ${props => props.$error ? 'var(--error-light)' : 'var(--primary-light)'};
+  }
 `;
 
-const ErrorMessage = styled.div`
+const ErrorText = styled.div`
   color: var(--error-color);
-  font-size: 0.875rem;
-  margin-top: 0.25rem;
+  font-size: 0.85rem;
+  margin-top: 0.5rem;
 `;
 
-const HelpText = styled.div`
+const HelperText = styled.div`
   color: var(--dark-gray);
-  font-size: 0.875rem;
-  margin-top: 0.25rem;
+  font-size: 0.85rem;
+  margin-top: 0.5rem;
 `;
 
 const FormInput = ({
   id,
+  name,
   label,
   type = 'text',
+  value,
+  onChange,
   error,
-  helpText,
-  ...props
+  helperText,
+  ...rest
 }) => {
-  const renderInput = () => {
-    switch (type) {
-      case 'textarea':
-        return (
-          <TextArea 
-            id={id} 
-            error={Boolean(error)} 
-            {...props} 
-          />
-        );
-      case 'select':
-        return (
-          <Select 
-            id={id} 
-            error={Boolean(error)} 
-            {...props} 
-          />
-        );
-      default:
-        return (
-          <Input 
-            id={id} 
-            type={type} 
-            error={Boolean(error)} 
-            {...props} 
-          />
-        );
-    }
-  };
-  
   return (
     <InputContainer>
       {label && <Label htmlFor={id}>{label}</Label>}
       
-      {renderInput()}
+      {type === 'textarea' ? (
+        <StyledTextarea
+          id={id}
+          name={name}
+          value={value}
+          onChange={onChange}
+          $error={!!error}
+          {...rest}
+        />
+      ) : (
+        <StyledInput
+          id={id}
+          name={name}
+          type={type}
+          value={value}
+          onChange={onChange}
+          $error={!!error}
+          {...rest}
+        />
+      )}
       
-      {error && <ErrorMessage>{error}</ErrorMessage>}
-      {helpText && !error && <HelpText>{helpText}</HelpText>}
+      {error && <ErrorText>{error}</ErrorText>}
+      {helperText && !error && <HelperText>{helperText}</HelperText>}
     </InputContainer>
   );
 };

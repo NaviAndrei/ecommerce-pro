@@ -1,150 +1,110 @@
 import React from 'react';
 import styled, { css } from 'styled-components';
 
-const ButtonStyles = css`
+const variants = {
+  primary: css`
+    background-color: var(--primary-color);
+    color: white;
+    &:hover:not(:disabled) {
+      background-color: var(--primary-dark);
+    }
+  `,
+  secondary: css`
+    background-color: var(--secondary-color);
+    color: white;
+    &:hover:not(:disabled) {
+      background-color: var(--secondary-dark);
+    }
+  `,
+  success: css`
+    background-color: var(--success-color);
+    color: white;
+    &:hover:not(:disabled) {
+      background-color: var(--success-dark);
+    }
+  `,
+  danger: css`
+    background-color: var(--error-color);
+    color: white;
+    &:hover:not(:disabled) {
+      background-color: var(--error-dark);
+    }
+  `,
+  outline: css`
+    background-color: transparent;
+    color: var(--primary-color);
+    border: 1px solid var(--primary-color);
+    &:hover:not(:disabled) {
+      background-color: var(--primary-light);
+    }
+  `,
+  text: css`
+    background-color: transparent;
+    color: var(--primary-color);
+    padding: 0.5rem;
+    &:hover:not(:disabled) {
+      background-color: var(--primary-light);
+    }
+  `
+};
+
+const sizes = {
+  small: css`
+    padding: 0.5rem 1rem;
+    font-size: 0.875rem;
+  `,
+  medium: css`
+    padding: 0.75rem 1.5rem;
+    font-size: 1rem;
+  `,
+  large: css`
+    padding: 1rem 2rem;
+    font-size: 1.125rem;
+  `
+};
+
+const StyledButton = styled.button`
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  padding: ${props => props.size === 'small' 
-    ? '0.5rem 1rem' 
-    : props.size === 'large' 
-      ? '0.75rem 1.5rem' 
-      : '0.625rem 1.25rem'};
-  font-size: ${props => props.size === 'small' 
-    ? '0.875rem' 
-    : props.size === 'large' 
-      ? '1.125rem' 
-      : '1rem'};
   font-weight: 500;
-  text-align: center;
-  text-decoration: none;
-  border: none;
   border-radius: var(--border-radius);
   cursor: pointer;
-  transition: all 0.2s ease-in-out;
+  transition: all 0.2s;
+  border: none;
+  font-family: inherit;
+  text-decoration: none;
+  width: ${props => props.$fullWidth ? '100%' : 'auto'};
   
-  ${props => {
-    switch (props.variant) {
-      case 'primary':
-        return css`
-          background-color: var(--primary-color);
-          color: white;
-          
-          &:hover, &:focus {
-            background-color: var(--primary-dark);
-          }
-          
-          &:disabled {
-            background-color: var(--medium-gray);
-            cursor: not-allowed;
-          }
-        `;
-      case 'secondary':
-        return css`
-          background-color: var(--light-gray);
-          color: var(--text-color);
-          
-          &:hover, &:focus {
-            background-color: var(--medium-gray);
-          }
-          
-          &:disabled {
-            color: var(--medium-gray);
-            cursor: not-allowed;
-          }
-        `;
-      case 'danger':
-        return css`
-          background-color: var(--error-color);
-          color: white;
-          
-          &:hover, &:focus {
-            opacity: 0.9;
-          }
-          
-          &:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-          }
-        `;
-      case 'outline':
-        return css`
-          background-color: transparent;
-          color: var(--primary-color);
-          border: 1px solid var(--primary-color);
-          
-          &:hover, &:focus {
-            background-color: var(--primary-color);
-            color: white;
-          }
-          
-          &:disabled {
-            color: var(--medium-gray);
-            border-color: var(--medium-gray);
-            cursor: not-allowed;
-          }
-        `;
-      case 'text':
-        return css`
-          background-color: transparent;
-          color: var(--primary-color);
-          padding: 0;
-          
-          &:hover, &:focus {
-            text-decoration: underline;
-          }
-          
-          &:disabled {
-            color: var(--medium-gray);
-            cursor: not-allowed;
-          }
-        `;
-      default:
-        return css`
-          background-color: var(--primary-color);
-          color: white;
-          
-          &:hover, &:focus {
-            background-color: var(--primary-dark);
-          }
-          
-          &:disabled {
-            background-color: var(--medium-gray);
-            cursor: not-allowed;
-          }
-        `;
-    }
-  }}
+  ${props => variants[props.$variant || 'primary']}
+  ${props => sizes[props.$size || 'medium']}
   
-  ${props => props.fullWidth && css`
-    width: 100%;
-  `}
+  &:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+  }
+  
+  svg {
+    margin-right: ${props => props.children ? '0.5rem' : '0'};
+  }
 `;
 
-const StyledButton = styled.button`${ButtonStyles}`;
-const StyledLink = styled.a`${ButtonStyles}`;
-
-const Button = ({ 
-  children, 
-  variant = 'primary', 
+const Button = ({
+  variant = 'primary',
   size = 'medium',
-  type = 'button',
   fullWidth = false,
-  as,
-  ...props 
+  children,
+  ...props
 }) => {
-  const Component = as ? StyledLink : StyledButton;
-  
   return (
-    <Component
-      variant={variant}
-      size={size}
-      type={type}
-      fullWidth={fullWidth}
+    <StyledButton
+      $variant={variant}
+      $size={size}
+      $fullWidth={fullWidth}
       {...props}
     >
       {children}
-    </Component>
+    </StyledButton>
   );
 };
 

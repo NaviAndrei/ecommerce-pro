@@ -1,10 +1,10 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { productsAPI } from '../../services/api';
 
-// Async thunks for product actions
+// Async thunk for fetching products
 export const fetchProducts = createAsyncThunk(
   'products/fetchProducts',
-  async (params = {}, { rejectWithValue }) => {
+  async (params, { rejectWithValue }) => {
     try {
       const response = await productsAPI.getProducts(params);
       return response.data;
@@ -14,8 +14,9 @@ export const fetchProducts = createAsyncThunk(
   }
 );
 
-export const fetchProduct = createAsyncThunk(
-  'products/fetchProduct',
+// Async thunk for fetching a single product
+export const fetchProductById = createAsyncThunk(
+  'products/fetchProductById',
   async (id, { rejectWithValue }) => {
     try {
       const response = await productsAPI.getProduct(id);
@@ -26,6 +27,7 @@ export const fetchProduct = createAsyncThunk(
   }
 );
 
+// Async thunk for fetching categories
 export const fetchCategories = createAsyncThunk(
   'products/fetchCategories',
   async (_, { rejectWithValue }) => {
@@ -38,42 +40,37 @@ export const fetchCategories = createAsyncThunk(
   }
 );
 
-// Products slice
+const initialState = {
+  items: [],
+  item: null,
+  categories: [],
+  loading: false,
+  error: null,
+  filters: {
+    category: null,
+    search: '',
+    sortBy: 'name',
+    sortOrder: 'asc'
+  }
+};
+
 const productsSlice = createSlice({
   name: 'products',
-  initialState: {
-    items: [],
-    currentProduct: null,
-    categories: [],
-    loading: false,
-    error: null,
-    filters: {
-      category: null,
-      search: '',
-      sort: 'name'
-    }
-  },
+  initialState,
   reducers: {
     setFilters: (state, action) => {
       state.filters = { ...state.filters, ...action.payload };
     },
     clearFilters: (state) => {
-      state.filters = {
-        category: null,
-        search: '',
-        sort: 'name'
-      };
+      state.filters = initialState.filters;
     },
-    clearError: (state) => {
-      state.error = null;
-    },
-    clearCurrentProduct: (state) => {
-      state.currentProduct = null;
+    clearProductDetail: (state) => {
+      state.item = null;
     }
   },
   extraReducers: (builder) => {
     builder
-      // Fetch products cases
+      // Fetch products
       .addCase(fetchProducts.pending, (state) => {
         state.loading = true;
         state.error = null;
@@ -87,21 +84,21 @@ const productsSlice = createSlice({
         state.error = action.payload;
       })
       
-      // Fetch single product cases
-      .addCase(fetchProduct.pending, (state) => {
+      // Fetch single product
+      .addCase(fetchProductById.pending, (state) => {
         state.loading = true;
         state.error = null;
       })
-      .addCase(fetchProduct.fulfilled, (state, action) => {
+      .addCase(fetchProductById.fulfilled, (state, action) => {
         state.loading = false;
-        state.currentProduct = action.payload;
+        state.item = action.payload;
       })
-      .addCase(fetchProduct.rejected, (state, action) => {
+      .addCase(fetchProductById.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
       })
       
-      // Fetch categories cases
+      // Fetch categories
       .addCase(fetchCategories.pending, (state) => {
         state.loading = true;
         state.error = null;
@@ -117,11 +114,5 @@ const productsSlice = createSlice({
   }
 });
 
-export const { 
-  setFilters, 
-  clearFilters, 
-  clearError,
-  clearCurrentProduct 
-} = productsSlice.actions;
-
+export const { setFilters, clearFilters, clearProductDetail } = productsSlice.actions;
 export default productsSlice.reducer;

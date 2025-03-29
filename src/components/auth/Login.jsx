@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
 import styled from 'styled-components';
 import { login, clearError } from '../../store/slices/authSlice';
 import FormInput from '../common/FormInput';
@@ -10,7 +10,7 @@ import Spinner from '../common/Spinner';
 
 const LoginContainer = styled.div`
   max-width: 500px;
-  margin: 2rem auto;
+  margin: 0 auto;
   padding: 2rem;
   background-color: white;
   border-radius: var(--border-radius);
@@ -22,7 +22,8 @@ const LoginHeader = styled.div`
   margin-bottom: 2rem;
 `;
 
-const LoginTitle = styled.h2`
+const LoginTitle = styled.h1`
+  color: var(--primary-color);
   margin-bottom: 0.5rem;
 `;
 
@@ -31,94 +32,53 @@ const LoginSubtitle = styled.p`
 `;
 
 const LoginForm = styled.form`
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
+  margin-bottom: 1.5rem;
 `;
 
-const ForgotPassword = styled(Link)`
-  font-size: 0.875rem;
-  text-align: right;
-  margin-top: -0.5rem;
-`;
-
-const RegisterLink = styled.div`
+const RegisterText = styled.div`
   text-align: center;
   margin-top: 1.5rem;
-  font-size: 0.9rem;
+  color: var(--dark-gray);
   
   a {
-    font-weight: 600;
-    margin-left: 0.25rem;
+    color: var(--primary-color);
+    font-weight: 500;
   }
 `;
 
 const Login = () => {
-  const dispatch = useDispatch();
-  const navigate = useNavigate();
-  const { loading, error, isAuthenticated } = useSelector(state => state.auth);
-  
   const [formData, setFormData] = useState({
     username: '',
     password: ''
   });
   
-  const [validationErrors, setValidationErrors] = useState({});
+  const { username, password } = formData;
+  const { loading, error, isAuthenticated } = useSelector(state => state.auth);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
   
+  // Redirect if already authenticated
   useEffect(() => {
-    // Redirect if already authenticated
     if (isAuthenticated) {
-      navigate('/');
+      navigate('/profile');
     }
     
-    // Clear any existing errors when component mounts
-    dispatch(clearError());
+    // Clear any previous errors when component mounts or unmounts
+    return () => {
+      dispatch(clearError());
+    };
   }, [isAuthenticated, navigate, dispatch]);
   
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    
+  const handleChange = e => {
     setFormData({
       ...formData,
-      [name]: value
+      [e.target.name]: e.target.value
     });
-    
-    // Clear validation error for this field
-    if (validationErrors[name]) {
-      setValidationErrors({
-        ...validationErrors,
-        [name]: ''
-      });
-    }
   };
   
-  const validateForm = () => {
-    const errors = {};
-    
-    if (!formData.username.trim()) {
-      errors.username = 'Username is required';
-    }
-    
-    if (!formData.password) {
-      errors.password = 'Password is required';
-    }
-    
-    setValidationErrors(errors);
-    
-    return Object.keys(errors).length === 0;
-  };
-  
-  const handleSubmit = async (e) => {
+  const handleSubmit = e => {
     e.preventDefault();
-    
-    if (validateForm()) {
-      try {
-        await dispatch(login(formData)).unwrap();
-        navigate('/');
-      } catch (err) {
-        // Error will be handled in the component via the auth state
-      }
-    }
+    dispatch(login({ username, password }));
   };
   
   return (
@@ -130,13 +90,14 @@ const Login = () => {
       
       {error && (
         <Alert 
-          type="error"
-          message={
-            typeof error === 'object' && error.detail
-              ? error.detail
-              : 'Login failed. Please check your credentials and try again.'
-          }
-        />
+          variant="error" 
+          title="Login Failed"
+          onDismiss={() => dispatch(clearError())}
+        >
+          {typeof error === 'object' 
+            ? Object.values(error).flat().join(' ') 
+            : error}
+        </Alert>
       )}
       
       <LoginForm onSubmit={handleSubmit}>
@@ -144,11 +105,10 @@ const Login = () => {
           id="username"
           name="username"
           label="Username"
-          value={formData.username}
+          value={username}
           onChange={handleChange}
-          placeholder="Enter your username"
-          error={validationErrors.username}
           disabled={loading}
+          required
         />
         
         <FormInput
@@ -156,18 +116,14 @@ const Login = () => {
           name="password"
           type="password"
           label="Password"
-          value={formData.password}
+          value={password}
           onChange={handleChange}
-          placeholder="Enter your password"
-          error={validationErrors.password}
           disabled={loading}
+          required
         />
-        
-        <ForgotPassword to="/forgot-password">Forgot password?</ForgotPassword>
         
         <Button 
           type="submit" 
-          variant="primary" 
           fullWidth 
           disabled={loading}
         >
@@ -175,10 +131,9 @@ const Login = () => {
         </Button>
       </LoginForm>
       
-      <RegisterLink>
-        Don't have an account?
-        <Link to="/register">Register</Link>
-      </RegisterLink>
+      <RegisterText>
+        Don't have an account? <Link to="/register">Register</Link>
+      </RegisterText>
     </LoginContainer>
   );
 };

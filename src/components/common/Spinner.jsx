@@ -15,14 +15,13 @@ const SpinnerContainer = styled.div`
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: ${props => props.fullPage ? '0' : '2rem'};
-  height: ${props => props.fullPage ? '100vh' : 'auto'};
+  margin: ${props => props.$inline ? '0' : '2rem'} auto;
 `;
 
-const SpinnerElement = styled.div`
-  width: ${props => props.size === 'small' ? '20px' : props.size === 'large' ? '50px' : '30px'};
-  height: ${props => props.size === 'small' ? '20px' : props.size === 'large' ? '50px' : '30px'};
-  border: ${props => props.size === 'small' ? '2px' : props.size === 'large' ? '4px' : '3px'} solid rgba(0, 0, 0, 0.1);
+const SpinnerCircle = styled.div`
+  width: ${props => props.$size === 'small' ? '1.5rem' : props.$size === 'large' ? '3rem' : '2rem'};
+  height: ${props => props.$size === 'small' ? '1.5rem' : props.$size === 'large' ? '3rem' : '2rem'};
+  border: ${props => props.$size === 'small' ? '2px' : '3px'} solid var(--border-color);
   border-top-color: var(--primary-color);
   border-radius: 50%;
   animation: ${spin} 0.8s linear infinite;
@@ -30,19 +29,19 @@ const SpinnerElement = styled.div`
 
 const SpinnerText = styled.p`
   margin-top: 1rem;
-  font-size: ${props => props.size === 'small' ? '0.875rem' : props.size === 'large' ? '1.25rem' : '1rem'};
   color: var(--dark-gray);
+  font-size: ${props => props.$size === 'small' ? '0.875rem' : '1rem'};
 `;
 
-const Spinner = ({ 
-  text, 
+const Spinner = ({
   size = 'medium',
-  fullPage = false
+  text,
+  inline = false,
 }) => {
   return (
-    <SpinnerContainer fullPage={fullPage}>
-      <SpinnerElement size={size} />
-      {text && <SpinnerText size={size}>{text}</SpinnerText>}
+    <SpinnerContainer $inline={inline}>
+      <SpinnerCircle $size={size} />
+      {text && <SpinnerText $size={size}>{text}</SpinnerText>}
     </SpinnerContainer>
   );
 };

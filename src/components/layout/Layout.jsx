@@ -3,28 +3,35 @@ import styled from 'styled-components';
 import Navbar from './Navbar';
 import Footer from './Footer';
 
-const Main = styled.main`
-  min-height: calc(100vh - 140px); /* Adjust based on header and footer height */
-  padding: 2rem 0;
+const LayoutContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
 `;
 
-const Container = styled.div`
-  max-width: var(--max-width);
+const Main = styled.main`
+  flex: 1;
+  padding: 2rem;
+  background-color: var(--light-bg);
+`;
+
+const ContentContainer = styled.div`
+  max-width: 1200px;
   margin: 0 auto;
-  padding: 0 1rem;
+  width: 100%;
 `;
 
 const Layout = ({ children }) => {
   return (
-    <>
+    <LayoutContainer>
       <Navbar />
       <Main>
-        <Container>
+        <ContentContainer>
           {children}
-        </Container>
+        </ContentContainer>
       </Main>
       <Footer />
-    </>
+    </LayoutContainer>
   );
 };
 

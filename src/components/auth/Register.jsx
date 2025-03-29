@@ -1,15 +1,16 @@
 import React, { useState, useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
 import styled from 'styled-components';
 import { register, clearError } from '../../store/slices/authSlice';
 import FormInput from '../common/FormInput';
 import Button from '../common/Button';
 import Alert from '../common/Alert';
+import Spinner from '../common/Spinner';
 
 const RegisterContainer = styled.div`
-  max-width: 600px;
-  margin: 2rem auto;
+  max-width: 500px;
+  margin: 0 auto;
   padding: 2rem;
   background-color: white;
   border-radius: var(--border-radius);
@@ -21,7 +22,8 @@ const RegisterHeader = styled.div`
   margin-bottom: 2rem;
 `;
 
-const RegisterTitle = styled.h2`
+const RegisterTitle = styled.h1`
+  color: var(--primary-color);
   margin-bottom: 0.5rem;
 `;
 
@@ -30,37 +32,32 @@ const RegisterSubtitle = styled.p`
 `;
 
 const RegisterForm = styled.form`
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
+  margin-bottom: 1.5rem;
 `;
 
-const FieldRow = styled.div`
+const FormRow = styled.div`
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 1rem;
   
   @media (max-width: 576px) {
     grid-template-columns: 1fr;
+    gap: 0;
   }
 `;
 
-const LoginLink = styled.div`
+const LoginText = styled.div`
   text-align: center;
   margin-top: 1.5rem;
-  font-size: 0.9rem;
+  color: var(--dark-gray);
   
   a {
-    font-weight: 600;
-    margin-left: 0.25rem;
+    color: var(--primary-color);
+    font-weight: 500;
   }
 `;
 
 const Register = () => {
-  const dispatch = useDispatch();
-  const navigate = useNavigate();
-  const { loading, error, isAuthenticated } = useSelector(state => state.auth);
-  
   const [formData, setFormData] = useState({
     username: '',
     email: '',
@@ -70,140 +67,85 @@ const Register = () => {
     last_name: ''
   });
   
-  const [validationErrors, setValidationErrors] = useState({});
+  const { username, email, password, password2, first_name, last_name } = formData;
+  const { loading, error, isAuthenticated } = useSelector(state => state.auth);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
   
+  // Redirect if already authenticated
   useEffect(() => {
-    // Redirect if already authenticated
     if (isAuthenticated) {
-      navigate('/');
+      navigate('/profile');
     }
     
-    // Clear any existing errors when component mounts
-    dispatch(clearError());
+    // Clear any previous errors when component mounts or unmounts
+    return () => {
+      dispatch(clearError());
+    };
   }, [isAuthenticated, navigate, dispatch]);
   
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    
+  const handleChange = e => {
     setFormData({
       ...formData,
-      [name]: value
+      [e.target.name]: e.target.value
     });
-    
-    // Clear validation error for this field
-    if (validationErrors[name]) {
-      setValidationErrors({
-        ...validationErrors,
-        [name]: ''
-      });
-    }
   };
   
-  const validateForm = () => {
-    const errors = {};
-    
-    if (!formData.username.trim()) {
-      errors.username = 'Username is required';
-    }
-    
-    if (!formData.email.trim()) {
-      errors.email = 'Email is required';
-    } else if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(formData.email)) {
-      errors.email = 'Invalid email address';
-    }
-    
-    if (!formData.password) {
-      errors.password = 'Password is required';
-    } else if (formData.password.length < 8) {
-      errors.password = 'Password must be at least 8 characters';
-    }
-    
-    if (!formData.password2) {
-      errors.password2 = 'Please confirm your password';
-    } else if (formData.password !== formData.password2) {
-      errors.password2 = 'Passwords do not match';
-    }
-    
-    if (!formData.first_name.trim()) {
-      errors.first_name = 'First name is required';
-    }
-    
-    if (!formData.last_name.trim()) {
-      errors.last_name = 'Last name is required';
-    }
-    
-    setValidationErrors(errors);
-    
-    return Object.keys(errors).length === 0;
-  };
-  
-  const handleSubmit = async (e) => {
+  const handleSubmit = e => {
     e.preventDefault();
-    
-    if (validateForm()) {
-      try {
-        await dispatch(register(formData)).unwrap();
-        // If successful, the user will be automatically logged in and redirected
-      } catch (err) {
-        // Error will be handled in the component via the auth state
-      }
-    }
+    dispatch(register(formData));
   };
   
   return (
     <RegisterContainer>
       <RegisterHeader>
-        <RegisterTitle>Create an Account</RegisterTitle>
-        <RegisterSubtitle>Sign up to start shopping</RegisterSubtitle>
+        <RegisterTitle>Create Account</RegisterTitle>
+        <RegisterSubtitle>Join ShopEase today</RegisterSubtitle>
       </RegisterHeader>
       
       {error && (
         <Alert 
-          type="error"
-          message={
-            typeof error === 'object'
-              ? Object.entries(error)
-                  .map(([key, value]) => `${key}: ${value}`)
-                  .join(', ')
-              : 'Registration failed. Please try again.'
-          }
-        />
+          variant="error" 
+          title="Registration Failed"
+          onDismiss={() => dispatch(clearError())}
+        >
+          {typeof error === 'object' 
+            ? Object.values(error).flat().join(' ') 
+            : error}
+        </Alert>
       )}
       
       <RegisterForm onSubmit={handleSubmit}>
-        <FieldRow>
+        <FormRow>
           <FormInput
             id="first_name"
             name="first_name"
             label="First Name"
-            value={formData.first_name}
+            value={first_name}
             onChange={handleChange}
-            placeholder="Enter your first name"
-            error={validationErrors.first_name}
             disabled={loading}
+            required
           />
           
           <FormInput
             id="last_name"
             name="last_name"
             label="Last Name"
-            value={formData.last_name}
+            value={last_name}
             onChange={handleChange}
-            placeholder="Enter your last name"
-            error={validationErrors.last_name}
             disabled={loading}
+            required
           />
-        </FieldRow>
+        </FormRow>
         
         <FormInput
           id="username"
           name="username"
           label="Username"
-          value={formData.username}
+          value={username}
           onChange={handleChange}
-          placeholder="Choose a username"
-          error={validationErrors.username}
           disabled={loading}
+          required
         />
         
         <FormInput
@@ -211,53 +153,48 @@ const Register = () => {
           name="email"
           type="email"
           label="Email Address"
-          value={formData.email}
+          value={email}
           onChange={handleChange}
-          placeholder="Enter your email address"
-          error={validationErrors.email}
           disabled={loading}
+          required
         />
         
-        <FieldRow>
-          <FormInput
-            id="password"
-            name="password"
-            type="password"
-            label="Password"
-            value={formData.password}
-            onChange={handleChange}
-            placeholder="Choose a password"
-            error={validationErrors.password}
-            disabled={loading}
-          />
-          
-          <FormInput
-            id="password2"
-            name="password2"
-            type="password"
-            label="Confirm Password"
-            value={formData.password2}
-            onChange={handleChange}
-            placeholder="Confirm your password"
-            error={validationErrors.password2}
-            disabled={loading}
-          />
-        </FieldRow>
+        <FormInput
+          id="password"
+          name="password"
+          type="password"
+          label="Password"
+          value={password}
+          onChange={handleChange}
+          disabled={loading}
+          required
+          helperText="Password must be at least 8 characters long."
+        />
+        
+        <FormInput
+          id="password2"
+          name="password2"
+          type="password"
+          label="Confirm Password"
+          value={password2}
+          onChange={handleChange}
+          disabled={loading}
+          error={password !== password2 && password2 !== '' ? "Passwords don't match" : null}
+          required
+        />
         
         <Button 
           type="submit" 
-          variant="primary" 
           fullWidth 
-          disabled={loading}
+          disabled={loading || (password !== password2 && password2 !== '')}
         >
           {loading ? 'Creating Account...' : 'Create Account'}
         </Button>
       </RegisterForm>
       
-      <LoginLink>
-        Already have an account?
-        <Link to="/login">Sign In</Link>
-      </LoginLink>
+      <LoginText>
+        Already have an account? <Link to="/login">Login</Link>
+      </LoginText>
     </RegisterContainer>
   );
 };
