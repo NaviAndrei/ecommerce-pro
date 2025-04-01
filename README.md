@@ -14,10 +14,9 @@
 
 EcoShop is a full-stack web application designed as a portfolio piece. It simulates a real-world online store, featuring product displays, user interactions, and a clean interface. The project demonstrates proficiency in both frontend and backend development, creating a seamless user experience.
 
-**(Optional: Add a link to the live deployment if you have one)**
-<!--
-**Live Demo:** [https://your-ecoshop-deployment-link.com](https://your-ecoshop-deployment-link.com)
--->
+
+**Live Demo:** [https://naviandrei.github.io/ecommerce-pro/](https://naviandrei.github.io/ecommerce-pro/)
+
 
 ---
 
@@ -115,9 +114,9 @@ To get a local copy up and running, follow these simple steps.
 
 ---
 
-## 🖼️ Screenshots (Optional)
 
-<!-- Add screenshots of your application here -->
+
+<!-- ## 🖼️ Screenshots -->
 <!--
 ![Homepage Screenshot](link-to-screenshot.png)
 _Homepage View_
@@ -126,7 +125,6 @@ _Homepage View_
 _Product Grid_
  -->
 
----
 
 ## 📜 License
 
