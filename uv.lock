@@ -73,7 +73,7 @@ wheels = [
 ]
 
 [[package]]
-name = "repl-nix-workspace"
+name = "ecommerce-pro"
 version = "0.1.0"
 source = { virtual = "." }
 dependencies = [

@@ -15,16 +15,18 @@ export const GlobalStyles = createGlobalStyle`
     -moz-osx-font-smoothing: grayscale;
     font-size: 16px;
     line-height: 1.5;
-    color: #333;
-    background-color: #f8f9fa;
+    color: #2D3748;
+    background-color: #EDF2F7;
+    min-height: 100vh;
   }
   
   a {
     text-decoration: none;
-    color: #007bff;
+    color: #9AE6B4;
+    font-weight: 500;
     
     &:hover {
-      color: #0056b3;
+      color: #68D391;
     }
   }
   
@@ -39,8 +41,9 @@ export const GlobalStyles = createGlobalStyle`
   
   h1, h2, h3, h4, h5, h6 {
     margin-bottom: 0.5rem;
-    font-weight: 500;
+    font-weight: 600;
     line-height: 1.2;
+    color: #2D3748;
   }
   
   p {

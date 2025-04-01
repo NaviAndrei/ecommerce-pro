@@ -1,7 +1,7 @@
 [project]
-name = "repl-nix-workspace"
+name = "ecommerce-pro"
 version = "0.1.0"
-description = "Add your description here"
+description = "E-commerce backend built with Django 5.1+, DRF, and JWT authentication, designed for React frontend integration"
 requires-python = ">=3.11"
 dependencies = [
     "django-cors-headers>=4.7.0",

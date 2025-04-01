@@ -2,6 +2,24 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import api from '../../services/api';
 import { setAuthToken, removeAuthToken, getToken } from '../../utils/authUtils';
 
+// Check authentication status
+export const checkAuth = createAsyncThunk(
+  'auth/checkAuth',
+  async (_, { dispatch }) => {
+    const token = localStorage.getItem('token');
+    if (token) {
+      setAuthToken(token);
+      try {
+        await dispatch(loadUser());
+        return true;
+      } catch (error) {
+        return false;
+      }
+    }
+    return false;
+  }
+);
+
 // Load user from token
 export const loadUser = createAsyncThunk(
   'auth/loadUser',
@@ -118,6 +136,20 @@ const authSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
+      // checkAuth
+      .addCase(checkAuth.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(checkAuth.fulfilled, (state) => {
+        state.loading = false;
+      })
+      .addCase(checkAuth.rejected, (state) => {
+        state.loading = false;
+        state.isAuthenticated = false;
+        state.token = null;
+        state.refreshToken = null;
+        state.user = null;
+      })
       // loadUser
       .addCase(loadUser.pending, (state) => {
         state.loading = true;

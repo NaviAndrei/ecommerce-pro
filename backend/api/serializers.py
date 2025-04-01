@@ -57,17 +57,16 @@ class ProfileSerializer(serializers.ModelSerializer):
 class CategorySerializer(serializers.ModelSerializer):
     class Meta:
         model = Category
-        fields = ['id', 'name', 'description']
+        fields = ('id', 'name') # Keep it simple for product listing
 
 
 class ProductSerializer(serializers.ModelSerializer):
     category = CategorySerializer(read_only=True)
-    category_id = serializers.IntegerField(write_only=True)
     
     class Meta:
         model = Product
-        fields = ['id', 'name', 'description', 'price', 'stock', 'is_active', 
-                  'category', 'category_id', 'image_url', 'created_at']
+        fields = ('id', 'name', 'description', 'price', 'stock', 'category', 'image_url', 'created_at')
+        # Exclude 'is_active' and 'updated_at' for now unless needed by the frontend list view
 
 
 class CartItemSerializer(serializers.ModelSerializer):

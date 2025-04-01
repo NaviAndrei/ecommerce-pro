@@ -4,7 +4,8 @@ from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 
 from .views import (
     RegisterView, ProfileView, CategoryViewSet, ProductViewSet,
-    CartView, CartItemView, OrderViewSet
+    CartView, CartItemView, OrderViewSet,
+    FeaturedProductListView
 )
 
 router = DefaultRouter()
@@ -13,6 +14,10 @@ router.register(r'products', ProductViewSet)
 router.register(r'orders', OrderViewSet, basename='orders')
 
 urlpatterns = [
+    # Featured Products (Moved up)
+    path('products/featured/', FeaturedProductListView.as_view(), name='featured-products'),
+
+    # Router URLs (Now checked after specific paths)
     path('', include(router.urls)),
     
     # Authentication

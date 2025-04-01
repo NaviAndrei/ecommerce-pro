@@ -67,6 +67,15 @@ class ProductViewSet(viewsets.ModelViewSet):
         return queryset
 
 
+class FeaturedProductListView(generics.ListAPIView):
+    """Returns the 4 most recently added active products."""
+    serializer_class = ProductSerializer
+    permission_classes = [permissions.AllowAny]
+    
+    def get_queryset(self):
+        return Product.objects.filter(is_active=True).order_by('-created_at')[:4]
+
+
 class CartView(APIView):
     permission_classes = [permissions.IsAuthenticated]
     
