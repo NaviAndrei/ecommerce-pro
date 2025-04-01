@@ -2,12 +2,6 @@
 /node_modules
 /frontend/node_modules
 
-# Build outputs (Common for React projects)
-/build
-/dist
-/frontend/build
-/frontend/dist
-
 # Logs
 logs
 *.log
