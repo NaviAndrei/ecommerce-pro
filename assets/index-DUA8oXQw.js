@@ -135,13 +135,13 @@ Please change the parent <Route path="${U}"> to <Route path="${U==="/"?"*":`${U}
   position: absolute;
   top: -8px;
   right: -8px;
-  background-color: #ED64A6;
+  background-color: #15803D;
   color: white;
   border-radius: 50%;
   padding: 0.1rem 0.4rem;
   font-size: 0.75rem;
 `,sC=T.button`
-  background-color: #ED64A6;
+  background-color: #15803D;
   color: white;
   border: none;
   padding: 0.5rem 1rem;
@@ -300,7 +300,7 @@ Please change the parent <Route path="${U}"> to <Route path="${U==="/"?"*":`${U}
     box-shadow: 0 0 0 3px rgba(154, 230, 180, 0.3); /* Mint Green focus shadow */
   }
 `,TC=T.button`
-  background-color: #ED64A6; /* Accent Pink */
+  background-color: #15803D; /* Accent Emerald Green */
   color: white;
   border: none;
   padding: 0.9rem;
@@ -333,7 +333,7 @@ Please change the parent <Route path="${U}"> to <Route path="${U==="/"?"*":`${U}
   color: #4A5568; /* Medium Gray */
   
   a {
-    color: #ED64A6; /* Accent Pink link */
+    color: #15803D; /* Accent Emerald Green link */
     font-weight: 500;
     text-decoration: none;
     
@@ -378,7 +378,7 @@ Please change the parent <Route path="${U}"> to <Route path="${U==="/"?"*":`${U}
     box-shadow: 0 0 0 3px rgba(154, 230, 180, 0.3); /* Mint Green focus shadow */
   }
 `,NC=T.button`
-  background-color: #ED64A6; /* Accent Pink */
+  background-color: #15803D; /* Accent Emerald Green */
   color: white;
   border: none;
   padding: 0.9rem;
@@ -412,7 +412,7 @@ Please change the parent <Route path="${U}"> to <Route path="${U==="/"?"*":`${U}
   color: #4A5568; /* Medium Gray */
   
   a {
-    color: #ED64A6; /* Accent Pink link */
+    color: #15803D; /* Accent Emerald Green link */
     font-weight: 500;
     text-decoration: none;
     
@@ -487,7 +487,7 @@ Please change the parent <Route path="${U}"> to <Route path="${U==="/"?"*":`${U}
 `,JC=T(ht)`
   display: block;
   text-align: center;
-  background-color: #ED64A6;
+  background-color: #15803D;
   color: white;
   font-weight: bold;
   text-decoration: none;
@@ -715,7 +715,7 @@ Please change the parent <Route path="${U}"> to <Route path="${U==="/"?"*":`${U}
   margin-bottom: 0.3rem;
   
   &:hover {
-    color: #ED64A6; /* Accent Pink on hover */
+    color: #15803D; /* Accent Emerald Green on hover */
   }
 `,DR=T.div`
   margin-top: 0.5rem;
@@ -845,7 +845,7 @@ Please change the parent <Route path="${U}"> to <Route path="${U==="/"?"*":`${U}
 `,KR=T(ht)`
   display: block;
   text-align: center;
-  background-color: #ED64A6; /* Accent Pink */
+  background-color: #15803D; /* Accent Emerald Green */
   color: white;
   font-weight: bold;
   text-decoration: none;
@@ -1362,7 +1362,7 @@ Please change the parent <Route path="${U}"> to <Route path="${U==="/"?"*":`${U}
   color: #4A5568; /* Slightly lighter Charcoal for body text */
   margin-bottom: 1.5rem;
 `,J2=T(ht)`
-  background-color: #ED64A6; /* Accent Pink */
+  background-color: #15803D; /* Accent Emerald Green */
   color: white;
   font-weight: bold;
   padding: 0.75rem 1.5rem;
@@ -1406,7 +1406,7 @@ Please change the parent <Route path="${U}"> to <Route path="${U==="/"?"*":`${U}
   font-size: 1.2rem;
   color: #4A5568;
 `,nT=T.section`
-  background-color: #ED64A6; /* Accent Pink */
+  background-color: #15803D; /* Accent Emerald Green */
   color: white;
   padding: 2rem 1.5rem;
   margin: 2rem 0;
@@ -1423,7 +1423,7 @@ Please change the parent <Route path="${U}"> to <Route path="${U==="/"?"*":`${U}
   margin-bottom: 1.5rem;
 `,lT=T(ht)`
   background-color: white;
-  color: #ED64A6; /* Accent Pink */
+  color: #15803D; /* Accent Emerald Green */
   font-weight: bold;
   padding: 0.6rem 1.2rem;
   border-radius: 4px;
