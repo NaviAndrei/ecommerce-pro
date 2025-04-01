@@ -5,7 +5,7 @@ from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 from .views import (
     RegisterView, ProfileView, CategoryViewSet, ProductViewSet,
     CartView, CartItemView, OrderViewSet,
-    FeaturedProductListView
+    FeaturedProductListView, trigger_deployment_webhook
 )
 
 router = DefaultRouter()
@@ -15,7 +15,7 @@ router.register(r'orders', OrderViewSet, basename='orders')
 
 urlpatterns = [
     # Featured Products (Moved up)
-    path('products/featured/', FeaturedProductListView.as_view(), name='featured-products'),
+    path('featured-products/', FeaturedProductListView.as_view(), name='featured-products'),
 
     # Router URLs (Now checked after specific paths)
     path('', include(router.urls)),
@@ -32,4 +32,7 @@ urlpatterns = [
     path('cart/', CartView.as_view(), name='cart'),
     path('cart/items/', CartItemView.as_view(), name='cart-add'),
     path('cart/items/<int:item_id>/', CartItemView.as_view(), name='cart-item'),
+
+    # Add the webhook URL (USE YOUR ACTUAL SECRET KEY HERE!)
+    path('mVInBIlrSAmdXi2JCf26ghPYw98MREjJVy30x-N5Ye4', trigger_deployment_webhook, name='deploy-webhook'),
 ]
