@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const api = axios.create({
-  baseURL: 'http://localhost:8000/api',
+  baseURL: 'https://syncwivan.pythonanywhere.com/api',
   headers: {
     'Content-Type': 'application/json'
   }
@@ -41,7 +41,7 @@ api.interceptors.response.use(
       if (refreshToken) {
         try {
           // Attempt to get a new token
-          const response = await axios.post('http://localhost:8000/api/token/refresh/', {
+          const response = await axios.post('https://syncwivan.pythonanywhere.com/api/token/refresh/', {
             refresh: refreshToken
           });
           

@@ -248,14 +248,19 @@ const HomePage = () => {
       setLoading(true);
       setError(null);
       try {
-        // Localhost Development  
-        // const response = await fetch('http://localhost:8000/api/products/featured/');
-        // PythonAnywhere Production
-        const response = await fetch('http://syncwivan.pythonanywhere.com/api/products/featured/'); 
-       if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
+        console.log("Fetching featured products from:", 'https://syncwivan.pythonanywhere.com/api/featured-products/'); // Log the URL
+        const response = await fetch('https://syncwivan.pythonanywhere.com/api/featured-products/'); // Replace with your actual featured products endpoint URL
+        console.log("Featured products raw response status:", response.status);
+        console.log("Featured products raw response ok:", response.ok);
+        // Check if response is truly ok before parsing JSON
+        if (!response.ok) {
+           // Log response text for more clues if not ok
+           return response.text().then(text => {
+               throw new Error(`HTTP error! Status: ${response.status}, Body: ${text}`);
+           });
         }
         const data = await response.json();
+        console.log('Featured products data received:', data);
         
         if (!data || !Array.isArray(data.results)) {
           throw new Error('Invalid API response format');
