@@ -248,8 +248,11 @@ const HomePage = () => {
       setLoading(true);
       setError(null);
       try {
-        const response = await fetch('http://localhost:8000/api/products/featured/');
-        if (!response.ok) {
+        // Localhost Development  
+        // const response = await fetch('http://localhost:8000/api/products/featured/');
+        // PythonAnywhere Production
+        const response = await fetch('http://syncwivan.pythonanywhere.com/api/products/featured/'); 
+       if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
         }
         const data = await response.json();
