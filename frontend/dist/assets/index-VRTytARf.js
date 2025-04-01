@@ -1615,4 +1615,4 @@ Please change the parent <Route path="${U}"> to <Route path="${U==="/"?"*":`${U}
   ::-webkit-scrollbar-thumb:hover {
     background: #555; 
   }
-`,ET=Y1.createRoot(document.getElementById("root"));ET.render(g.jsx(Wt.StrictMode,{children:g.jsx(ax,{store:xT,children:g.jsxs(AS,{children:[g.jsx(ST,{}),g.jsx(vT,{})]})})}));
+`,ET=Y1.createRoot(document.getElementById("root"));ET.render(g.jsx(Wt.StrictMode,{children:g.jsx(ax,{store:xT,children:g.jsxs(AS,{basename:"/ecommerce-pro",children:[g.jsx(ST,{}),g.jsx(vT,{})]})})}));

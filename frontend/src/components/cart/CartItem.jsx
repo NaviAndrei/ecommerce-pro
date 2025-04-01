@@ -71,7 +71,7 @@ const ProductName = styled(Link)`
   margin-bottom: 0.3rem;
   
   &:hover {
-    color: #ED64A6; /* Accent Pink on hover */
+    color: #15803D; /* Accent Emerald Green on hover */
   }
 `;
 

@@ -53,7 +53,7 @@ const Input = styled.input`
 `;
 
 const Button = styled.button`
-  background-color: #ED64A6; /* Accent Pink */
+  background-color: #15803D; /* Accent Emerald Green */
   color: white;
   border: none;
   padding: 0.9rem;
@@ -90,7 +90,7 @@ const RedirectLink = styled.div`
   color: #4A5568; /* Medium Gray */
   
   a {
-    color: #ED64A6; /* Accent Pink link */
+    color: #15803D; /* Accent Emerald Green link */
     font-weight: 500;
     text-decoration: none;
     

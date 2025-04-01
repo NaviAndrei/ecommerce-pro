@@ -80,7 +80,7 @@ const CartCount = styled.span`
   position: absolute;
   top: -8px;
   right: -8px;
-  background-color: #ED64A6;
+  background-color: #15803D;
   color: white;
   border-radius: 50%;
   padding: 0.1rem 0.4rem;
@@ -88,7 +88,7 @@ const CartCount = styled.span`
 `;
 
 const Button = styled.button`
-  background-color: #ED64A6;
+  background-color: #15803D;
   color: white;
   border: none;
   padding: 0.5rem 1rem;

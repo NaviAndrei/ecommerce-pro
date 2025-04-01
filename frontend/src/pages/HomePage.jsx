@@ -63,7 +63,7 @@ const HeroText = styled.p`
 `;
 
 const ShopButton = styled(Link)`
-  background-color: #ED64A6; /* Accent Pink */
+  background-color: #15803D; /* Accent Emerald Green */
   color: white;
   font-weight: bold;
   padding: 0.75rem 1.5rem;
@@ -120,7 +120,7 @@ const EmptyMessage = styled.div`
 
 // New Styled Components for Promo Banner
 const PromoBannerContainer = styled.section`
-  background-color: #ED64A6; /* Accent Pink */
+  background-color: #15803D; /* Accent Emerald Green */
   color: white;
   padding: 2rem 1.5rem;
   margin: 2rem 0;
@@ -143,7 +143,7 @@ const PromoBannerText = styled.p`
 
 const PromoBannerButton = styled(Link)`
   background-color: white;
-  color: #ED64A6; /* Accent Pink */
+  color: #15803D; /* Accent Emerald Green */
   font-weight: bold;
   padding: 0.6rem 1.2rem;
   border-radius: 4px;

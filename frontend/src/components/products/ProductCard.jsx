@@ -82,7 +82,7 @@ const StockInfo = styled.div`
 const ViewButton = styled(Link)`
   display: block;
   text-align: center;
-  background-color: #ED64A6;
+  background-color: #15803D;
   color: white;
   font-weight: bold;
   text-decoration: none;

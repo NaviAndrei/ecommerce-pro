@@ -71,7 +71,7 @@ const StyledHr = styled.hr`
 const CheckoutButton = styled(Link)`
   display: block;
   text-align: center;
-  background-color: #ED64A6; /* Accent Pink */
+  background-color: #15803D; /* Accent Emerald Green */
   color: white;
   font-weight: bold;
   text-decoration: none;
