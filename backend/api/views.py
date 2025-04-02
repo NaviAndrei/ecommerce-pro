@@ -279,20 +279,23 @@ def trigger_deployment_webhook(request):
         return JsonResponse({"status": "success", "message": "Deployment triggered and commands executed."})
 
     except subprocess.CalledProcessError as e:
-        error_message = f"Deployment script failed.
+        # Use triple quotes for multi-line f-string
+        error_message = f"""Deployment script failed.
 Return Code: {e.returncode}
 STDOUT: {e.stdout}
-STDERR: {e.stderr}"
+STDERR: {e.stderr}"""
         print(f"ERROR: {error_message}")
         return HttpResponseServerError(error_message)
     except subprocess.TimeoutExpired as e:
-         error_message = f"Deployment script timed out after {e.timeout} seconds.
+        # Use triple quotes for multi-line f-string
+        error_message = f"""Deployment script timed out after {e.timeout} seconds.
 STDOUT: {e.stdout}
-STDERR: {e.stderr}"
-         print(f"ERROR: {error_message}")
-         return HttpResponseServerError(error_message)
+STDERR: {e.stderr}"""
+        print(f"ERROR: {error_message}")
+        return HttpResponseServerError(error_message)
     except Exception as e:
         # Catch any other unexpected exceptions
+        # Single line f-string is fine here
         error_message = f"An unexpected error occurred during deployment: {str(e)}"
         import traceback
         print(f"ERROR: {error_message}")
