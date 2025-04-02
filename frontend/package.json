@@ -1,7 +1,7 @@
 {
   "name": "frontend",
   "version": "1.0.0",
-  "homepage": "https://NaviAndrei.github.io/ecommerce-pro",
+  "homepage": "https://naviandrei.github.io/ecommerce-pro",
   "main": "index.js",
   "scripts": {
     "dev": "vite",
