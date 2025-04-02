@@ -8,6 +8,11 @@
           - 'frontend/**' 
           - '.github/workflows/deploy-frontend.yml' 
 
+    permissions:
+      contents: write # Allow write access to repository contents (needed to push to gh-pages)
+      pages: write    # Needed for the peaceiris/actions-gh-pages action
+      id-token: write # Often needed for newer versions of deployment actions
+
     jobs:
       build-and-deploy:
         runs-on: ubuntu-latest
