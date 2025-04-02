@@ -1,0 +1,43 @@
+    name: Deploy Backend to PythonAnywhere (Webhook)
+
+    on:
+      push:
+        branches:
+          - main # Or your default branch name (e.g., master)
+        paths:
+          - 'backend/**' # Only run if files in backend/ change
+          - '.github/workflows/deploy-backend.yml' # Or if this workflow file changes
+
+    jobs:
+      deploy:
+        runs-on: ubuntu-latest
+
+        steps:
+          - name: Trigger PythonAnywhere Deployment Webhook
+            env:
+              # IMPORTANT: Replace the '/your_very_secret_string_here/' part below
+              # with the actual secret segment you used in your Django urls.py!
+              WEBHOOK_URL: https://syncwivan.pythonanywhere.com/api/deploy/trigger-pull/mVInBIlrSAmdXi2JCf26ghPYw98MREjJVy30x-N5Ye4/
+              WEBHOOK_SECRET: ${{ secrets.PYTHONANYWHERE_WEBHOOK_SECRET }}
+            run: |
+              echo "Triggering deployment webhook..."
+              # Send POST request, check HTTP status code, show response body on error
+              curl_output=$(curl -s -w "%{http_code}" -X POST \
+                -H "X-Deploy-Secret: ${WEBHOOK_SECRET}" \
+                "${WEBHOOK_URL}" -o response.txt)
+
+              response_code=${curl_output: -3} # Extract last 3 chars (status code)
+              response_body=$(cat response.txt)
+
+              echo "Webhook response code: $response_code"
+              if [ "$response_code" -ne 200 ]; then
+                echo "Webhook trigger failed!"
+                echo "Response Body:"
+                echo "$response_body"
+                # Optionally fail the workflow
+                # exit 1 # Uncomment this line if you want the GitHub Action job to fail on webhook error
+              else
+                 echo "Webhook triggered successfully."
+                 echo "Response Body:" # Log success response too for info
+                 echo "$response_body"
+              fi

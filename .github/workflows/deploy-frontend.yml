@@ -3,17 +3,22 @@
     on:
       push:
         branches:
-          - main # Or your default branch (e.g., master)
+          - main 
         paths:
-          - 'frontend/**' # Only run if files in frontend/ change
-          - '.github/workflows/deploy-frontend.yml' # Or if the workflow file itself changes
+          - 'frontend/**' 
+          - '.github/workflows/deploy-frontend.yml' 
+
+    permissions:
+      contents: write # Allow write access to repository contents (needed to push to gh-pages)
+      pages: write    # Needed for the peaceiris/actions-gh-pages action
+      id-token: write # Often needed for newer versions of deployment actions
 
     jobs:
       build-and-deploy:
         runs-on: ubuntu-latest
         defaults:
           run:
-            working-directory: frontend # Set working directory for all steps
+            working-directory: frontend
 
         steps:
           - name: Checkout code
@@ -22,7 +27,7 @@
           - name: Set up Node.js
             uses: actions/setup-node@v4
             with:
-              node-version: '20' # Use the Node.js version matching your project
+              node-version: '23.8.0'
               cache: 'npm'
               cache-dependency-path: frontend/package-lock.json # Path to lock file
 
@@ -30,12 +35,12 @@
             run: npm ci # 'ci' is generally faster and safer for CI environments
 
           - name: Build project
-            run: npm run build # Assumes your build script is 'build'
+            run: npm run build 
 
           - name: Deploy to GitHub Pages
-            uses: peaceiris/actions-gh-pages@v4 # Popular action for gh-pages deployment
+            uses: peaceiris/actions-gh-pages@v4 
             with:
               github_token: ${{ secrets.GITHUB_TOKEN }}
-              publish_dir: ./frontend/build # Directory containing build artifacts
+              publish_dir: ./frontend/build 
               # Optional: If deploying to a subdirectory like /ecommerce-pro/
               # cname: yourcustomdomain.com # If you have a custom domain
